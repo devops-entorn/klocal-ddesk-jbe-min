@@ -45,6 +45,11 @@ if [ "$1" == "ssh" ]; then
     exit 0
 fi
 
+if [ "$1" == "vnc" ]; then
+    entorn-vnc $2
+    exit 0
+fi
+
 # entorn show
 show_help_show(){
 	entorn-show -h
@@ -125,6 +130,9 @@ echo "$(ColorGreen 'entorn run [app_name]')"
 echo ""
 echo "To connect to Entorn Server via ssh:"
 echo "$(ColorGreen 'entorn ssh')"
+echo ""
+echo "To open the 5901 port for VNC connections:"
+echo "$(ColorGreen 'entorn vnc')"
 echo ""
 
 

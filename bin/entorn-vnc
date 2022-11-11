@@ -1,0 +1,57 @@
+#!/bin/bash
+
+password=pluralcamp
+fullscreen=FALSE
+
+## dependencies
+check_depend() {
+        check_sshdep=$(dpkg -l | grep "$1")
+        if [ "$check_sshdep" == "" ]; then
+                echo "$1 is not installed. Installing it now ..."
+                sudo apt install "$1" -y > /dev/null 2>&1
+        fi
+}
+
+check_depend ssh
+check_depend sshfs
+check_depend sshpass
+
+user=$(entorn-getuser)
+
+port=2222
+
+ssh-keygen -f "/home/$(whoami)/.ssh/known_hosts" -R "[localhost]:$port" > /dev/null
+
+sshpass -p "$password" ssh -p $port -L 5901:localhost:5901 -N -f -l $user localhost > /dev/null 2>&1 || echo "Adress already in use"
+
+echo "VNC connection ready on 5901"
+echo "You can now use a VNC viewer to connect to localhost:5901"
+echo
+
+if [ "$1" == "open" ]; then
+
+## Open VNC viewer if WSL
+kernel_ver=$(uname -a | grep WSL)
+if [ "$kernel_ver" != "" ]; then
+
+	realvnc="/mnt/c/Program Files/RealVNC/VNC Viewer/vncviewer.exe" 
+
+	tightvnc="/mnt/c/Program Files/TightVNC/tvnviewer.exe"
+
+	if [ -f "$realvnc" ]; then	
+		"$realvnc" localhost:5901 --FullScreen=$fullscreen 
+		exit 0
+	else
+		echo "ConnectVNC not installed. Trying now with TightVNC..."
+	fi
+
+	if [ -f "$tightvnc" ]; then
+		"$tightvnc" localhost:5901 -fullscreen=yes -password=pluralcamp -scale=auto -mousecursor=local -mouselocal=normal -jpegimagequality=9
+	else
+		echo "TightVNC is not installed"
+		echo "Please install ConnectVNC (RealVNC) or TightVNC viewers and try again"
+		echo
+	fi
+fi
+fi
+exit 0
