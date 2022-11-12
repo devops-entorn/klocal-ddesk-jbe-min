@@ -1,5 +1,10 @@
 #!/bin/bash
 
+port=2222
+password=pluralcamp
+
+explorer="explorer"
+
 # make sure path is correct
 res=$(echo $PATH | grep $(whoami))
 if [ -z "$res" ]; then 
@@ -7,7 +12,7 @@ if [ -z "$res" ]; then
 fi
 
 # user can be overriden
-if [[ ! -z $1  ]]
+if [[ ! -z $1  ]] && [ "$1" != "$explorer" ]
 then
     user=$1
 else    
@@ -33,16 +38,18 @@ if [ "$mounted" == "" ]; then
 	echo
 	echo "$user's Entorn already mounted at $dir"
 	echo
-	exit 1
+	already_mounted=true
 fi
+
+if [ "$already_mounted" != true ]; then
 
 mkdir -p $dir 
 sudo mkdir -p /home/godrive
 sudo chown $USER /home/godrive
 
-echo pluralcamp | sshfs -o UserKnownHostsFile=/dev/null,allow_other,default_permissions -o password_stdin -o StrictHostKeyChecking=no -o kernel_cache -p 2222 $user@localhost:/home/$user $dir
+echo $password | sshfs -o UserKnownHostsFile=/dev/null,allow_other,default_permissions -o password_stdin -o StrictHostKeyChecking=no -o kernel_cache -p $port $user@localhost:/home/$user $dir
 
-echo pluralcamp | sshfs -o UserKnownHostsFile=/dev/null,allow_other,default_permissions -o password_stdin -o StrictHostKeyChecking=no -o kernel_cache -p 2222 $user@localhost:/home/godrive /home/godrive
+echo $password | sshfs -o UserKnownHostsFile=/dev/null,allow_other,default_permissions -o password_stdin -o StrictHostKeyChecking=no -o kernel_cache -p $port $user@localhost:/home/godrive /home/godrive
 
 echo
 if [ $? -eq 0 ]; then
@@ -51,12 +58,19 @@ else
   echo "Error in mounting home directory from Entorn"
 fi
 echo
+# already mounted end
+fi
 
 ## Open window if WSL
 kernel_ver=$(uname -a | grep WSL)
 if [ "$kernel_ver" != "" ]; then
-    cd $dir
-    explorer.exe .
+	winscp="/mnt/c/Program Files (x86)/WinSCP/WinSCP.exe"	
+	if [ -f "$winscp" ] && [ "$1" != "$explorer" ]; then
+		"$winscp" scp://$user:$password@localhost:$port/ &
+	else
+		cd $dir
+		explorer.exe .
+	fi
 fi
 
 exit 0
