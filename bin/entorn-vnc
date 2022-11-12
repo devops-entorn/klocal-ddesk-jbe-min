@@ -2,6 +2,18 @@
 
 password=pluralcamp
 fullscreen=FALSE
+port=2222
+command=open
+
+# display can be overriden
+if [[ ! -z $1  ]] && [ "$1" != "$command" ]
+then
+	display=$1
+    else
+	display=2
+fi
+
+display_port=$((5900+$display))
 
 ## dependencies
 check_depend() {
@@ -18,14 +30,12 @@ check_depend sshpass
 
 user=$(entorn-getuser)
 
-port=2222
-
 ssh-keygen -f "/home/$(whoami)/.ssh/known_hosts" -R "[localhost]:$port" > /dev/null
 
-sshpass -p "$password" ssh -p $port -L 5901:localhost:5901 -N -f -l $user localhost > /dev/null 2>&1 || echo "Adress already in use"
+sshpass -p "$password" ssh -p $port -L $display_port:localhost:$display_port -N -f -l $user localhost > /dev/null 2>&1 || echo "Adress already in use"
 
-echo "VNC connection ready on 5901"
-echo "You can now use a VNC viewer to connect to localhost:5901"
+echo "VNC connection ready on $display_port"
+echo "You can now use a VNC viewer to connect to localhost:$display_port"
 echo
 
 if [ "$1" == "open" ]; then
@@ -39,14 +49,14 @@ if [ "$kernel_ver" != "" ]; then
 	tightvnc="/mnt/c/Program Files/TightVNC/tvnviewer.exe"
 
 	if [ -f "$realvnc" ]; then	
-		"$realvnc" localhost:5901 --FullScreen=$fullscreen 
+		"$realvnc" localhost:$display_port --FullScreen=$fullscreen 
 		exit 0
 	else
 		echo "ConnectVNC not installed. Trying now with TightVNC..."
 	fi
 
 	if [ -f "$tightvnc" ]; then
-		"$tightvnc" localhost:5901 -fullscreen=yes -password=pluralcamp -scale=auto -mousecursor=local -mouselocal=normal -jpegimagequality=9
+		"$tightvnc" localhost:$display_port -fullscreen=yes -password=$password -scale=auto -mousecursor=local -mouselocal=normal -jpegimagequality=9
 	else
 		echo "TightVNC is not installed"
 		echo "Please install ConnectVNC (RealVNC) or TightVNC viewers and try again"
