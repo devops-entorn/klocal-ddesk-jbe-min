@@ -30,10 +30,14 @@ check_depend sshpass
 
 user=$(entorn-getuser)
 
-ssh-keygen -f "/home/$(whoami)/.ssh/known_hosts" -R "[localhost]:$port" > /dev/null
+if [ -f "/home/$(whoami)/.ssh/known_hosts" ]; then
+	ssh-keygen -f "/home/$(whoami)/.ssh/known_hosts" -R "[localhost]:$port" > /dev/null
+fi
 
-sshpass -p "$password" ssh -p $port -L $display_port:localhost:$display_port -N -f -l $user localhost > /dev/null 2>&1 || echo "Adress already in use"
+sshpass -p "$password" ssh -p $port -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -L $display_port:localhost:$display_port -N -f -l $user localhost > /dev/null 2>&1 || echo "Adress already in use"
 
+sudo lsof -i -P -n | grep $display_port
+echo
 echo "VNC connection ready on $display_port"
 echo "You can now use a VNC viewer to connect to localhost:$display_port"
 echo
