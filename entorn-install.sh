@@ -100,6 +100,11 @@ if [ "$1" ]; then
 fi
 
 ## Kubernetes deployment
+
+if [ -f "/home/$USER/.kube/config" ]; then
+	        chmod 600 /home/$USER/.kube/config
+fi
+
 cd ./kube-local/
 ./install-k8s-entorn.sh
 
