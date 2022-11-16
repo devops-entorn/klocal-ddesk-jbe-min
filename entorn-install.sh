@@ -102,7 +102,7 @@ fi
 ## Kubernetes deployment
 
 if [ -f "/home/$USER/.kube/config" ]; then
-	        chmod 600 /home/$USER/.kube/config
+        chmod 600 /home/$USER/.kube/config
 fi
 
 cd ./kube-local/
