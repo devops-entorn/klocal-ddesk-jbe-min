@@ -42,15 +42,15 @@ singleuser:
           medium: Memory
       - name: docker-sock-{username}
         emptyDir: {}
-      - name: docker-data
+      - name: docker-data-{username}
         persistentVolumeClaim:
-          claimName: dockerdata-claim
+          claimName: dockerdata-claim-{username}
       - name: apps
         persistentVolumeClaim:
           claimName: apps-claim
-      - name: dbdata
+      - name: dbdata-{username}
         persistentVolumeClaim:
-          claimName: dbdata-claim
+          claimName: dbdata-claim-{username}
       - name: conda-envs
         persistentVolumeClaim:
           claimName: conda-envs-claim
@@ -60,12 +60,12 @@ singleuser:
     extraVolumeMounts:
       - name: shm-volume
         mountPath: /dev/shm
-      - name: docker-data
+      - name: docker-data-{username}
         mountPath: /var/lib/docker
       - name: apps
         mountPath: /opt/apps
-      - name: dbdata
-        mountPath: /opt/dbdata
+      - name: dbdata-{username}
+        mountPath: /opt/dbdata-{username}
       - name: conda-envs
         mountPath: /opt/conda/envs
       - name: nbgrader-exchange
@@ -94,14 +94,14 @@ singleuser:
             securityContext: 
               privileged: true 
             volumeMounts: 
-              - name: docker-data
+              - name: docker-data-{username}
                 mountPath: /var/lib/docker 
               - name: volume-{username}
                 mountPath: /home/{username}
               - name: docker-sock-{username}
                 mountPath: /run
-              - name: dbdata
-                mountPath: /opt/dbdata                
+              - name: dbdata-{username}
+                mountPath: /opt/dbdata-{username}                
         security_context:
           privileged: true
           fsGroup: 100
