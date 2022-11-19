@@ -14,7 +14,7 @@ proxy:
  #   hosts:
  #     - my.entorn.io
  #   letsencrypt:
- #     contactEmail: orboan@ilg.cat
+ #     contactEmail: orboan@pluralcamp.com
   # only the proxy's secretToken is required
   secretToken: c3a6b7b6c89839e448e5f85f30fcd51d521921a0d5e7ecbc55d2e5c098612648
   service:
@@ -22,7 +22,7 @@ proxy:
 singleuser:
   defaultUrl: "/lab"
   memory:
-    limit: 4G
+    limit: 5G
     guarantee: 4G
   cpu:
     limit: 4
@@ -75,13 +75,13 @@ singleuser:
     homeMountPath: /home/{username}
     dynamic:
       storageClass: hostpath 
-    capacity: 20Gi
+    capacity: 25Gi
   image:
-    name: entorn-io/singleuser-full 
+    name: entorn-io/singleuser-javaweb 
     tag: 0.1.0
     pullPolicy: IfNotPresent
   profileList:
-    - display_name: "Entorn 22-23"
+    - display_name: "Entorn Java Backend"
       description: "Entorn v0.1.0"
       kubespawner_override:
         extra_containers:
@@ -112,7 +112,7 @@ hub:
     pullPolicy: IfNotPresent
   config:
     extraEnv:
-      LTI_AUTH_CONSUMER_URL: 'https://educaciodigital.cat'
+      LTI_AUTH_CONSUMER_URL: 'https://lms.pluralcamp.com'
       #    DummyAuthenticator:
       #      password: pluralcamp
       #    JupyterHub:

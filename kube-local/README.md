@@ -1,2 +1,2 @@
-# k8s entorn local
-## ilg lti min
+# pluralcamp entorn local
+## entorn lti min

@@ -24,7 +24,7 @@ docker rmi ${remote_base_name}-$1:$ver 2>/dev/null
 #pull_image dev
 #pull_image data
 #pull_image ops
-pull_image full
+pull_image javaweb
 
 if ! docker pull ${remote_base_name}-hub-lti:$ver 2>/dev/null ; then
 	error=true

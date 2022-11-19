@@ -1,4 +1,4 @@
-# k8s entorn for learning
-## ilg.cat
-Author orboan <orboan@ilg.cat>
+# kubernetes entorn for learning
+## pluralcamp lms
+Author Oriol Boix Anfosso <orboan@pluralcamp.com>
 
