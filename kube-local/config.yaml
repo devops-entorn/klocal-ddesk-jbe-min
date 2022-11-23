@@ -105,14 +105,20 @@ singleuser:
         security_context:
           privileged: true
           fsGroup: 100
+cull:
+  enabled: false
 hub:
   image:
-    name: entorn-io/hub-lti
+    name: entorn-io/hub-jbe
     tag: 0.1.0
     pullPolicy: IfNotPresent
-  config:
-    extraEnv:
-      LTI_AUTH_CONSUMER_URL: 'https://lms.pluralcamp.com'
+  #config:
+    #JupyterHub:
+    #  authenticator_class: ltiauthenticator.lti11.MyLTIAuthenticator # LTI 1.1
+    #LTIAuthenticator:
+    #  consumers: { "client-key": "client-secret" }
+    #extraEnv:
+      # LTI_AUTH_CONSUMER_URL: 'https://lms.pluralcamp.com'
       #    DummyAuthenticator:
       #      password: pluralcamp
       #    JupyterHub:
@@ -122,7 +128,7 @@ hub:
       #        - orboan
   extraConfig:
     lti-auth: |
-      c.JupyterHub.authenticator_class = MyLTIAuthenticator
+          c.JupyterHub.authenticator_class = MyLTIAuthenticator
     spawner: |
       c.Spawner.cmd = ['start.sh','jupyterhub-singleuser','--allow-root']
       def notebook_dir_hook(spawner):
