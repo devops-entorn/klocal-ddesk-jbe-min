@@ -26,11 +26,11 @@ docker rmi ${remote_base_name}-$1:$ver 2>/dev/null
 #pull_image ops
 pull_image javaweb
 
-if ! docker pull ${remote_base_name}-hub-lti:$ver 2>/dev/null ; then
+if ! docker pull ${remote_base_name}-hub-jbe:$ver 2>/dev/null ; then
 	error=true
 fi
-docker tag ${remote_base_name}-hub-lti:$ver entorn-io/hub-lti:${ver} 2>/dev/null
-docker rmi ${remote_base_name}-hub-lti:$ver 2>/dev/null
+docker tag ${remote_base_name}-hub-jbe:$ver entorn-io/hub-jbe:${ver} 2>/dev/null
+docker rmi ${remote_base_name}-hub-jbe:$ver 2>/dev/null
 
 if ! docker pull ${remote_base_name}-dind:$ver 2>/dev/null ; then
 	error=true
