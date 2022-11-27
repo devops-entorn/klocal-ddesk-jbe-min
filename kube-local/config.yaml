@@ -112,12 +112,13 @@ hub:
     name: entorn-io/hub-jbe
     tag: 0.1.0
     pullPolicy: IfNotPresent
-  #config:
+  config:
     #JupyterHub:
     #  authenticator_class: ltiauthenticator.lti11.MyLTIAuthenticator # LTI 1.1
     #LTIAuthenticator:
     #  consumers: { "client-key": "client-secret" }
-    #extraEnv:
+    extraEnv:
+      INGRESS_PUBLIC_IP: "xxx.xxx.xxx.xxx"
       # LTI_AUTH_CONSUMER_URL: 'https://lms.pluralcamp.com'
       #    DummyAuthenticator:
       #      password: pluralcamp
@@ -130,6 +131,8 @@ hub:
     lti-auth: |
           c.JupyterHub.authenticator_class = MyLTIAuthenticator
     spawner: |
+      #import os
+      #ingress_public_ip = os.environ["USER"]
       c.Spawner.cmd = ['start.sh','jupyterhub-singleuser','--allow-root']
       def notebook_dir_hook(spawner):
           is_instructor='false'
@@ -140,7 +143,7 @@ hub:
               if spawner.user.name == instructor['id']:
                   is_instructor='true'
                   break
-          spawner.environment = {'NB_USER':spawner.user.name,'NB_UID':'1000','IS_INSTRUCTOR':is_instructor, 'CHOWN_HOME':'yes', 'CHOWN_HOME_OPTS':'-R', 'DOCKER_HOST':'tcp://localhost:2375', 'GRANT_SUDO':"yes",'NOTEBOOK_ARGS':"--allow-root", 'SUDOERS_ALL': "true"}
+          spawner.environment = {'NB_USER':spawner.user.name,'NB_UID':'1000','IS_INSTRUCTOR':is_instructor, 'CHOWN_HOME':'yes', 'CHOWN_HOME_OPTS':'-R', 'DOCKER_HOST':'tcp://localhost:2375', 'GRANT_SUDO':"yes",'NOTEBOOK_ARGS':"--allow-root", 'SUDOERS_ALL': "true", 'INGRESS_PUBLIC_IP': ""}
       c.Spawner.pre_spawn_hook = notebook_dir_hook
     security: |
       from kubernetes_asyncio import client
@@ -154,8 +157,6 @@ hub:
         return pod
       c.KubeSpawner.modify_pod_hook = modify_pod_hook
       c.JupyterHub.admin_access = True
-    cull:
-      timeout=3800
 ingress:
   enabled: true
   hosts:
@@ -241,3 +242,5 @@ ingress:
       }
 
       proxy_set_header X-Script-Name /user/$user/pgadmin;
+
+
