@@ -244,7 +244,7 @@ ingress:
 
       #Jenkins
       #add_header 'Location' "$host" always; //Failed to fetch in JupyterLab !!
-      #proxy_set_header Connection ""; # Clear for keepalive
+      proxy_set_header Connection ""; # Clear for keepalive
       client_body_buffer_size    128k;
       proxy_set_header Host $host;
       proxy_set_header X-Real-IP $remote_addr;
