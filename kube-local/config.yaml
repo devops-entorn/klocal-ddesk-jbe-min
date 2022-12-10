@@ -22,8 +22,8 @@ proxy:
 singleuser:
   defaultUrl: "/lab"
   memory:
-    limit: 5G
-    guarantee: 4G
+    limit: 12G
+    guarantee: 8G
   cpu:
     limit: 4
     guarantee: 2
@@ -143,7 +143,7 @@ hub:
               if spawner.user.name == instructor['id']:
                   is_instructor='true'
                   break
-          spawner.environment = {'NB_USER':spawner.user.name,'NB_UID':'1000','IS_INSTRUCTOR':is_instructor, 'CHOWN_HOME':'yes', 'CHOWN_HOME_OPTS':'-R', 'DOCKER_HOST':'tcp://localhost:2375', 'GRANT_SUDO':"yes",'NOTEBOOK_ARGS':"--allow-root", 'SUDOERS_ALL': "true", 'INGRESS_PUBLIC_IP': "10.101.35.239"}
+          spawner.environment = {'NB_USER':spawner.user.name,'NB_UID':'1000','IS_INSTRUCTOR':is_instructor, 'CHOWN_HOME':'yes', 'CHOWN_HOME_OPTS':'-R', 'DOCKER_HOST':'tcp://localhost:2375', 'GRANT_SUDO':"yes",'NOTEBOOK_ARGS':"--allow-root", 'SUDOERS_ALL': "true", 'INGRESS_PUBLIC_IP': "10.102.39.27"}
       c.Spawner.pre_spawn_hook = notebook_dir_hook
     security: |
       from kubernetes_asyncio import client
@@ -243,8 +243,8 @@ ingress:
       proxy_set_header X-Script-Name /user/$user/pgadmin;
 
       #Jenkins
-      add_header 'Location' "$host" always;
-      proxy_set_header Connection ""; # Clear for keepalive
+      #add_header 'Location' "$host" always; //Failed to fetch in JupyterLab !!
+      #proxy_set_header Connection ""; # Clear for keepalive
       client_body_buffer_size    128k;
       proxy_set_header Host $host;
       proxy_set_header X-Real-IP $remote_addr;
